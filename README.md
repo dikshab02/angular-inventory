@@ -1,0 +1,2 @@
+# angular-inventory
+Inventory UI
