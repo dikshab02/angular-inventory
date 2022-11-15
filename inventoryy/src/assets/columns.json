@@ -1,0 +1,9 @@
+{
+  "columns": [
+      { "id": 2, "title": "Name", "contentAlignment": "center", "width": 60 },
+      { "id": 3, "title": "Description", "width": 150 },
+      { "id": 4, "title": "Measure Unit", "width": 250 },
+      { "id": 5, "title": "Image Url", "width": 250 },
+      { "id": 6, "title": "Quantity", "width": 250 }
+  ]
+}

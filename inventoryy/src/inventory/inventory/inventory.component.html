@@ -1,0 +1,35 @@
+<!-- <p>inventory works!</p>
+<button mat-fab (click)="openDialog()">
+  <mat-icon>add</mat-icon>
+</button> -->
+
+    <button mat-raised-button (click)="openDialog()" color="accent"><mat-icon>add</mat-icon></button>
+    <mat-grid-list cols="5" rowHeight="50px">
+      <mat-grid-tile
+      *ngFor="let tile of mytiles"
+      [colspan]="tile.cols"
+      [rowspan]="tile.rows"
+      [style.background]="tile.color">
+      {{tile.text}}
+      </mat-grid-tile>
+
+      <ng-container *ngFor="let row of gridData">
+      <mat-grid-tile>
+      {{row.name}}
+      </mat-grid-tile>
+      <mat-grid-tile>
+        {{row.description}}
+        </mat-grid-tile>
+        <mat-grid-tile>
+          {{row.measureUnit}}
+          </mat-grid-tile>
+          <mat-grid-tile>
+            <img src="{{row.imageUrl}}" width="30px">
+            </mat-grid-tile>
+            <mat-grid-tile>
+              {{row.quantity}}
+              </mat-grid-tile>
+    </ng-container>
+      <!-- loop griddata -->
+      <!-- create 5 mat-grid-tile (one for each column) -->
+    </mat-grid-list>
