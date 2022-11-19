@@ -1,5 +1,9 @@
 import { HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ɵclearResolutionOfComponentResourcesQueue,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddInventoryComponent } from '../add-inventory/add-inventory.component';
 import { InventoryService } from '../inventory.service';
@@ -41,7 +45,7 @@ export class InventoryComponent implements OnInit {
     public inventoryService: InventoryService
   ) {}
   ngOnInit(): void {
-    this.getColumnsFromJSON(this.mytiles);
+    // this.getColumnsFromJSON(this.mytiles);
     this.getRowsFromJSON();
   }
 
@@ -52,24 +56,24 @@ export class InventoryComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      this.name = result;
+      console.log('The dialog was closed', result);
+      if (result) this.updateGridQuantity(result.products, result.quantity);
     });
   }
 
-  getColumnsFromJSON(data: any) {
-    let columnList: any[] = [];
-
-    // Create columns
-    data.forEach((obj: any) => {
-      let column = Object.assign({ headerAlignment: 'center' }, obj);
-
-      columnList.push(column);
-      console.log(column, columnList);
-    });
-
-    return columnList;
+  updateGridQuantity(resultP: any, resultQ: any) {
+    console.log('this.gridData = ', this.gridData)
+    console.log('resultP -> ', resultP);
+    console.log('resultQ -> ', resultQ);
+    const matchData =  this.gridData.find(g => g.id === resultP);
+    console.log("matchData->",matchData);
+    if(matchData)
+      {
+        matchData.quantity = matchData.quantity*1 + resultQ *1;
+        console.log(matchData.quantity);
+      }
   }
+
 
   getRowsFromJSON() {
     let rowList: any[] = [];
@@ -79,8 +83,6 @@ export class InventoryComponent implements OnInit {
       ([products, inventory]: any[]) => {
         this.products = products;
         this.inventory = inventory;
-        console.log('products', products);
-        console.log('inventory', inventory);
         this.generateInventoryData(this.products, this.inventory);
       }
     );
@@ -88,50 +90,16 @@ export class InventoryComponent implements OnInit {
 
   generateInventoryData(products: any[], inventory: any[]) {
     console.log('generate', products);
-    this.gridData = [];
-    // this.gridData = products.map(p => {
-    //   console.log("generate p", products);
-    //   const foundInventory = inventory.find(i => i.productID === p.id)
-    for (let p = 0; p < products.length; p++) {
-      let inv = null;
-      // find inventory if any and store it in inv
-      for (let i = 0; i < inventory.length; i++) {
-        if (products[p].id == inventory[i].productID) inv = inventory[i];
-      }
-      // create a new object which is exact copy of product[p]
-      let newObj = JSON.parse(JSON.stringify(products[p])) // copy by value not by reference
-      if (inv) {
-        // add quantity
-        newObj['quantity'] = inv.quantity;
+    this.gridData = products.map((p) => {
+      const foundInventory = inventory.find((i) => i.productID === p.id); // find inventory if any and store it in foundInventory
+      let newObj = JSON.parse(JSON.stringify(p));
+      if (foundInventory) {
+        newObj['quantity'] = foundInventory.quantity;
       } else {
-        // add qty as 0
         newObj['quantity'] = 0;
       }
-      this.gridData.push(newObj);
-    }
-    console.log('this.gridData = ', this.gridData);
-    // if(p.id === inventory.find(i => {
-    //   i.productID
-    //   newObj.name = p.name;
-    //   console.log("generate name", newObj.name);
-    //   newObj.description = p.description;
-    //   newObj.measureUnit = p.measureUnit;
-    //   newObj.image = p.imageUrl;
-    //   console.log("generate newobj", newObj.name);
-    //   if(p.id === i.productID)
-    //   {
-
-    //     if(i.quantity === '')
-    //       newObj.quantity = 0;
-    //       else
-    //       newObj.quantity = i.quantity;
-    //   }
-    //   else
-    //   {
-    //     newObj.quantity = 0;
-    //   }
-
-    // console.log(newObj);
-    // return newObj;
+      console.log('this.gridData= ', this.gridData);
+      return newObj;
+    });
   }
 }

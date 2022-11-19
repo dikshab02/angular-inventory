@@ -1,18 +1,14 @@
 <h1 mat-dialog-title>{{ data.name }}</h1>
 <div mat-dialog-content>
-  <form>
+  <form id="form1" [formGroup]="popupForm" (ngSubmit)="submitForm()">
     <mat-form-field appearance="fill">
       <mat-label>Product</mat-label>
-      <mat-select #fontSize value="16px">
-        <mat-option *ngFor="let items of products" [value]="items.id">
+        <mat-select #fontSize value="16px" formControlName="products">
+        <mat-option *ngFor="let items of products" [value]="items.id" >
           {{ items.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <!-- <mat-form-field>
-    <mat-label>Quantity</mat-label>
-    <textarea matInput placeholder="Add quantity..."></textarea>
-  </mat-form-field> -->
     <mat-form-field [style.fontSize]="fontSize.value" appearance="fill">
       <mat-label>Autosize textarea</mat-label>
       <textarea
@@ -20,11 +16,13 @@
         cdkTextareaAutosize
         cdkAutosizeMinRows="1"
         cdkAutosizeMaxRows="5"
+        formControlName="quantity"
       ></textarea>
     </mat-form-field>
+    <div mat-dialog-actions>
+      <button mat-button [mat-dialog-close]="true" (click)="onNoClick()">Cancel</button>
+      <button mat-button color="primary" type="submit" [mat-dialog-close]="true" [mat-dialog-close]="data" cdkFocusInitial>Save</button>
+    </div>
   </form>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button [mat-dialog-close]="data.id" cdkFocusInitial>Save</button>
-</div>
+

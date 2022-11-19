@@ -1,4 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InventoryService } from '../inventory.service';
 import { DialogData } from '../inventory/inventory.component';
@@ -10,6 +11,12 @@ import { DialogData } from '../inventory/inventory.component';
 })
 export class AddInventoryComponent implements OnInit {
   products: any = [];
+  selectedValue = '';
+
+  popupForm = new FormGroup({
+    products: new FormControl<string>(''),
+    quantity: new FormControl<string>('')
+  });
 
   constructor(
     public dialogRef: MatDialogRef<AddInventoryComponent>,
@@ -25,10 +32,14 @@ export class AddInventoryComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  submitForm() {
+    this.dialogRef.close(this.popupForm.value);
+  }
+
   loadProducts(): void {
     this.inventoryService.loadProducts().subscribe((products) => {
       this.products = products;
-      console.log(this.products);
+      console.log("hello->",this.products);
     });
   }
 }

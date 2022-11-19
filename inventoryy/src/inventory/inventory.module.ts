@@ -12,7 +12,7 @@ import { AddInventoryComponent } from './add-inventory/add-inventory.component';
 import { InventoryRoutingModule } from './inventory-routing.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 
@@ -28,7 +28,8 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatSelectModule,
     MatGridListModule,
-    MatInputModule
+    MatInputModule,
+    ReactiveFormsModule
   ],
   exports: [InventoryComponent],
 })
