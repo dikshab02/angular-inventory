@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InventoryService } from '../inventory.service';
@@ -21,11 +21,12 @@ export class AddInventoryComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AddInventoryComponent>,
     public inventoryService: InventoryService,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
   ngOnInit(): void {
-    this.loadProducts();
+    console.log('data = ', this.data.gridData);
+    this.loadProducts(this.data.gridData);
   }
 
   onNoClick(): void {
@@ -36,10 +37,8 @@ export class AddInventoryComponent implements OnInit {
     this.dialogRef.close(this.popupForm.value);
   }
 
-  loadProducts(): void {
-    this.inventoryService.loadProducts().subscribe((products) => {
-      this.products = products;
-      console.log("hello->",this.products);
-    });
+  //dropdown list
+  loadProducts(gridData?: any[]): void {
+    this.products = gridData;
   }
 }

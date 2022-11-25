@@ -3,14 +3,15 @@
   <form id="form1" [formGroup]="popupForm" (ngSubmit)="submitForm()">
     <mat-form-field appearance="fill">
       <mat-label>Product</mat-label>
-        <mat-select #fontSize value="16px" formControlName="products">
-        <mat-option *ngFor="let items of products" [value]="items.id" >
+      <mat-select #fontSize value="16px" formControlName="products">
+        <mat-option *ngFor="let items of products" [value]="items.id">
           {{ items.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
+
     <mat-form-field [style.fontSize]="fontSize.value" appearance="fill">
-      <mat-label>Autosize textarea</mat-label>
+      <mat-label>Quantity</mat-label>
       <textarea
         matInput
         cdkTextareaAutosize
@@ -19,10 +20,21 @@
         formControlName="quantity"
       ></textarea>
     </mat-form-field>
+
     <div mat-dialog-actions>
-      <button mat-button [mat-dialog-close]="true" (click)="onNoClick()">Cancel</button>
-      <button mat-button color="primary" type="submit" [mat-dialog-close]="true" [mat-dialog-close]="data" cdkFocusInitial>Save</button>
+      <button mat-button [mat-dialog-close]="true" (click)="onNoClick()">
+        Cancel
+      </button>
+      <button
+        mat-button
+        color="primary"
+        type="submit"
+        [mat-dialog-close]="true"
+        [mat-dialog-close]="data"
+        cdkFocusInitial
+      >
+        Save
+      </button>
     </div>
   </form>
 </div>
-

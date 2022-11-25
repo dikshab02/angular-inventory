@@ -10,9 +10,6 @@ export class InventoryService {
   loadProducts(){
     return this.http.get('./assets/productList.json');
   }
-  // loadColumns(){
-  //   return this.http.get('./assets/columns.json')
-  // }
 
   loadInventory() {
     return this.http.get('./assets/inventoryList.json');

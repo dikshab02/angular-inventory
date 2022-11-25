@@ -1,13 +1,12 @@
-import { HttpClientModule } from '@angular/common/http';
 import {
   Component,
-  OnInit,
-  ɵclearResolutionOfComponentResourcesQueue,
+  OnInit
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddInventoryComponent } from '../add-inventory/add-inventory.component';
 import { InventoryService } from '../inventory.service';
 import { forkJoin } from 'rxjs';
+import { AddProductComponent } from '../add-product/add-product.component';
 
 export interface DialogData {
   name: string;
@@ -30,6 +29,7 @@ export class InventoryComponent implements OnInit {
   id: string | undefined;
   name: string | undefined = 'Add Inventory';
   mytiles: Tile[] = [
+    { text: 'Id', cols: 1, rows: 1, color: 'lightblue' },
     { text: 'Name', cols: 1, rows: 1, color: 'lightblue' },
     { text: 'Description', cols: 1, rows: 1, color: 'lightblue' },
     { text: 'Measure Unit', cols: 1, rows: 1, color: 'lightblue' },
@@ -45,35 +45,46 @@ export class InventoryComponent implements OnInit {
     public inventoryService: InventoryService
   ) {}
   ngOnInit(): void {
-    // this.getColumnsFromJSON(this.mytiles);
     this.getRowsFromJSON();
   }
 
-  openDialog(): void {
+  openInventoryDialog(): void {
     const dialogRef = this.dialog.open(AddInventoryComponent, {
       width: '800px',
-      data: { id: this.id, name: this.name },
+      data: { id: this.id, name: this.name, gridData: this.gridData },
     });
-
+    console.log('grid', this.gridData);
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed', result);
-      if (result) this.updateGridQuantity(result.products, result.quantity);
+      console.log('The dialog was closed1', result);
+      if (result)
+      {
+        this.updateGridQuantity(result.products, result.quantity);
+      }
+    });
+  }
+
+  openProductDialog() {
+    const dialogRef = this.dialog.open(AddProductComponent, {
+      width: '800px',
+      data: {id: this.id, name: this.name}
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if(result)
+      {
+        this.gridData.push(result);
+        result.id = this.genUniqueId();
+      }
     });
   }
 
   updateGridQuantity(resultP: any, resultQ: any) {
-    console.log('this.gridData = ', this.gridData)
-    console.log('resultP -> ', resultP);
-    console.log('resultQ -> ', resultQ);
     const matchData =  this.gridData.find(g => g.id === resultP);
-    console.log("matchData->",matchData);
     if(matchData)
       {
+        matchData['quantity'] = isNaN(matchData.quantity * 1) ? 0 : matchData.quantity;
         matchData.quantity = matchData.quantity*1 + resultQ *1;
-        console.log(matchData.quantity);
       }
   }
-
 
   getRowsFromJSON() {
     let rowList: any[] = [];
@@ -89,7 +100,6 @@ export class InventoryComponent implements OnInit {
   }
 
   generateInventoryData(products: any[], inventory: any[]) {
-    console.log('generate', products);
     this.gridData = products.map((p) => {
       const foundInventory = inventory.find((i) => i.productID === p.id); // find inventory if any and store it in foundInventory
       let newObj = JSON.parse(JSON.stringify(p));
@@ -98,8 +108,21 @@ export class InventoryComponent implements OnInit {
       } else {
         newObj['quantity'] = 0;
       }
-      console.log('this.gridData= ', this.gridData);
       return newObj;
     });
   }
+
+  genUniqueId(): string {
+    const dateStr = Date
+      .now()
+      .toString(36); // convert num to base 36 and stringify
+
+    const randomStr = Math
+      .random()
+      .toString(36)
+      .substring(2, 8); // start at index 2 to skip decimal point
+
+    return `${dateStr}-${randomStr}`;
+  }
+
 }

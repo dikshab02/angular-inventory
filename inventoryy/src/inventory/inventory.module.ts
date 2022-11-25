@@ -15,9 +15,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
+import { AddProductComponent } from './add-product/add-product.component';
 
 @NgModule({
-  declarations: [InventoryComponent, AddInventoryComponent],
+  declarations: [InventoryComponent, AddInventoryComponent, AddProductComponent],
   imports: [
     CommonModule,
     FormsModule,
