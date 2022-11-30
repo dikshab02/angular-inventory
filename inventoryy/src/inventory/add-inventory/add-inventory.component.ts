@@ -34,7 +34,10 @@ export class AddInventoryComponent implements OnInit {
   }
 
   submitForm() {
-    this.dialogRef.close(this.popupForm.value);
+    let productDetails = this.products.find((p: any) => p.id === this.popupForm.value.products)
+    productDetails = JSON.parse(JSON.stringify(productDetails))
+    productDetails['quantity'] = this.popupForm.value.quantity;
+    this.dialogRef.close(productDetails);
   }
 
   //dropdown list

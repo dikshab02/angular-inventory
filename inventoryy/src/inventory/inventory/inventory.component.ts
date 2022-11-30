@@ -39,6 +39,8 @@ export class InventoryComponent implements OnInit {
   products: any[] = [];
   inventory: any[] = [];
   gridData: any[] = [];
+  links: any[] = []; //active list of popup
+  deletedObj: any[] = [];
 
   constructor(
     public dialog: MatDialog,
@@ -47,6 +49,22 @@ export class InventoryComponent implements OnInit {
   ngOnInit(): void {
     this.getRowsFromJSON();
   }
+  loadUpdatedProduct(res: any) {
+    this.links.push(res);
+    console.log("links->",this.links)
+  }
+
+  undo() {
+   let temp = this.links.splice(this.links.length - 1)[0];
+   this.deletedObj.push(temp);
+   this.updateGridQuantity(temp.id,temp.quantity * -1);
+  }
+
+  redo() {
+    let recoveredObj = this.deletedObj.splice(this.deletedObj.length - 1)[0];
+    this.updateGridQuantity(recoveredObj.id,recoveredObj.quantity );
+   this.links.push(recoveredObj);
+  }
 
   openInventoryDialog(): void {
     const dialogRef = this.dialog.open(AddInventoryComponent, {
@@ -54,11 +72,12 @@ export class InventoryComponent implements OnInit {
       data: { id: this.id, name: this.name, gridData: this.gridData },
     });
     console.log('grid', this.gridData);
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed1', result);
-      if (result)
+    dialogRef.afterClosed().subscribe((inv: any) => {
+      this.loadUpdatedProduct(inv);
+      console.log('The dialog was closed1', inv);
+      if (inv)
       {
-        this.updateGridQuantity(result.products, result.quantity);
+        this.updateGridQuantity(inv.id, inv.quantity);
       }
     });
   }
@@ -77,8 +96,8 @@ export class InventoryComponent implements OnInit {
     });
   }
 
-  updateGridQuantity(resultP: any, resultQ: any) {
-    const matchData =  this.gridData.find(g => g.id === resultP);
+  updateGridQuantity(resultPid: any, resultQ: any) {
+    const matchData =  this.gridData.find(g => g.id === resultPid);
     if(matchData)
       {
         matchData['quantity'] = isNaN(matchData.quantity * 1) ? 0 : matchData.quantity;

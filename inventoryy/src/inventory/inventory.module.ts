@@ -16,6 +16,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { AddProductComponent } from './add-product/add-product.component';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatListModule} from '@angular/material/list';
 
 @NgModule({
   declarations: [InventoryComponent, AddInventoryComponent, AddProductComponent],
@@ -30,7 +32,9 @@ import { AddProductComponent } from './add-product/add-product.component';
     MatSelectModule,
     MatGridListModule,
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatMenuModule,
+    MatListModule
   ],
   exports: [InventoryComponent],
 })
